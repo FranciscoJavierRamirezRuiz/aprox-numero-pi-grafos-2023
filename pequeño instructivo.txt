@@ -1,0 +1,15 @@
+para hacer uso de la aplicacion es necesario tener instalada la ultima actualizacion de phyton y un ide de su preferencia, en nuestro caso usamos sublimetext 3 y pycharm,
+
+ademas sera necesario instalar unas librerias que son indispensables para el compilamiento del codigo
+
+Pandas: Abra tu terminal o línea de comandos y escriba "pip install pandas". Esto instalará la última versión de Pandas en su sistema.
+
+Tkinter: En caso de que esté usando Python 3.x, Tkinter ya viene incluido con la instalación estándar de Python. Si estás usando Python 2.x, 
+puede instalarlo escribiendo sudo apt-get install python-tk en la terminal.
+
+Matplotlib: Escriba pip install matplotlib en la terminal para instalar la última versión de Matplotlib en su sistema.
+
+
+
+
+De antemano muchas gracias!!

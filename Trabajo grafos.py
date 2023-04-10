@@ -1,0 +1,115 @@
+# Nombres: Cesar Hernandez, Francisco Ramirez
+# Profesor:Michael Emil Cristi Capstick
+# Sección:411
+# -----------------------------------------------Librerias-----------------------------------
+
+import random
+import math
+import pandas as pd
+from tkinter import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+
+
+# -----------------------------------------------Funciones---------------------------------------
+
+def Lanzamiento(n, r):
+    dentro = 0
+
+    for a in range(n):
+        x = random.uniform(-r, r)
+        y = random.uniform(-r, r)
+        distancia = math.sqrt(x ** 2 + y ** 2)
+
+        if distancia <= r:
+            dentro += 1
+
+    PiAprox = 4 * dentro / n
+    return dentro, PiAprox
+
+
+# ---------------------------------------------------------------------------------------------
+def Simular():
+    NumSim = int(CuadroTexto1.get())
+    NumDardos = int(CuadroTexto2.get())
+    r = 0.5  ### El radio lo hicimos constante en 0.5
+    aux = NumDardos
+
+    DardosCuadrado = []
+    DardosCirculo = []
+    Aproximacion.clear()
+
+    resultados = []
+
+    for i in range(NumSim):
+        Dardos, pi = Lanzamiento(NumDardos, r)
+        DardosCuadrado.append(NumDardos)
+        DardosCirculo.append(Dardos)
+        Aproximacion.append(pi)
+
+        resultados.append({
+            "Simulación": i + 1,
+            "Dardos en el cuadrado": NumDardos,
+            "Dardos en el círculo": Dardos,
+            "Aproximación de PI": pi
+        })
+
+        NumDardos = NumDardos + aux
+
+        fig.clear()
+        ax = fig.add_subplot(111)
+        ax.plot(Aproximacion)
+        ax.axhline(y=math.pi, color='red', linestyle='--', label='Valor de PI')
+        ax.set_xlabel('Simulación')
+        ax.set_ylabel('Aproximación de PI')
+        canvas.draw()
+
+    df = pd.DataFrame(resultados)
+
+    Resultados.delete('1.0', END)
+    Resultados.insert(END, df.to_string(index=False))
+
+
+# -----------------------------------------------Interfaz Grafica-----------------------------------
+
+Interfaz = Tk()
+Interfaz.title("Simulador Lanzamiento de dardos!")
+Interfaz.geometry("1300x640")
+Interfaz.config(bg="cyan")
+
+Simulaciones = Label(Interfaz, text="Número de simulaciones:")
+Simulaciones.grid(row=0, column=0, padx=10, pady=5)
+Simulaciones.config(bg="cyan")
+
+CuadroTexto1 = Entry(Interfaz)
+CuadroTexto1.grid(row=0, column=1)
+
+Dardos = Label(Interfaz, text="Número de dardos:")
+Dardos.grid(row=1, column=0, padx=10, pady=5)
+Dardos.config(bg="cyan")
+
+Mensaje = Label(Interfaz, text="<--*Esta cantidad se sumará al total de dardos en cada iteración*")
+Mensaje.grid(row=1, column=2)
+Mensaje.config(bg="cyan")
+
+CuadroTexto2 = Entry(Interfaz)
+CuadroTexto2.grid(row=1, column=1)
+
+Boton = Button(Interfaz, text="Simular", command=Simular, width=20, height=3, font=(12), padx=10, pady=5)
+Boton.grid(row=4, column=0, columnspan=7)
+
+Resultados = Text(Interfaz, width=80, height=30)
+Resultados.grid(row=3, column=4)
+
+Scrollbar = Scrollbar(Interfaz, command=Resultados.yview)
+Scrollbar.grid(row=3, column=5, sticky="nsew")
+
+Resultados.config(bg="orange", yscrollcommand=Scrollbar.set)
+
+Aproximacion = []
+
+fig, ax = plt.subplots()
+canvas = FigureCanvasTkAgg(fig, master=Interfaz)
+canvas.get_tk_widget().grid(row=3, column=0, columnspan=3)
+
+Interfaz.mainloop()
